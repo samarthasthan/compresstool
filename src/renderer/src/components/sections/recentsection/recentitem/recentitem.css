@@ -1,0 +1,53 @@
+.recent-item {
+  height: 51px;
+  margin: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.wrapper {
+  height: 34px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.icon {
+  height: 100%;
+}
+.icon img {
+  width: 16px;
+  height: 16px;
+}
+
+.size p {
+  border: 1px solid var(--border-color);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+
+.title-area {
+  width: 100%;
+  margin-left: 16px;
+}
+.title-area .title {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.time {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+}
+
+.options {
+  width: 19px;
+  color: black;
+}
+
+.size {
+  padding: 0px 16px;
+}
