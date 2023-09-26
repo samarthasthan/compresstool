@@ -52,3 +52,16 @@
 .right {
   left: calc(50% - 8px) !important;
 }
+.settings {
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+}
+.setting-icon {
+  color: var(--primary-color);
+  width: 25px;
+  height: 25px;
+  padding: 5px;
+  border-radius: 200px;
+  border: 1px solid var(--border-color);
+}

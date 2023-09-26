@@ -1,12 +1,14 @@
-import Header from './components/header/Header'
-import Mainbody from './components/mainbody/Mainbody'
+import Settings from './pages/settings/Settings'
+import HomePage from './pages/homepage/HomePage'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 function App() {
   return (
-    <>
-      <Header></Header>
-      <div className="header-fix"></div>
-      <Mainbody></Mainbody>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage></HomePage>}></Route>
+        <Route path="/settings" element={<Settings></Settings>}></Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

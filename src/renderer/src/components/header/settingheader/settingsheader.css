@@ -1,0 +1,21 @@
+.settings-header {
+  height: 68px;
+  width: 100vw;
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.back {
+  height: 68px;
+  left: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+}
+
+.back-icon {
+  width: 30px;
+  cursor: pointer;
+}
