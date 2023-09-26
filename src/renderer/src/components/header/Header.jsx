@@ -11,10 +11,6 @@ function Header() {
   const tabHandler = (value) => {
     dispatch(toggle(value))
   }
-
-  window.api.switchtab((event, toggleTab) => {
-    dispatch(toggle(toggleTab))
-  })
   return (
     <header className="header">
       <div className="switch-section">
