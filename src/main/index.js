@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+let toggleTab = 'left'
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -34,6 +35,15 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  setInterval(() => {
+    if (toggleTab === 'left') {
+      toggleTab = 'right'
+    } else {
+      toggleTab = 'left'
+    }
+    mainWindow.webContents.send('switchtab', toggleTab)
+  }, 3000)
 }
 
 // This method will be called when Electron has finished
