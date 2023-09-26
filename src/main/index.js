@@ -2,10 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import sharp from 'sharp'
-const path = require('path')
-const os = require('os')
-const fs = require('fs')
+import { setSettings, getSettings } from './settings/settings'
+
+//// Start
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -70,39 +69,16 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+////Edning
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
+/// IPC Handlers
 
-ipcMain.on('compress-image', (event, filePath, softwareName) => {
-  // Get the user's home directory
-  const userHomeDir = os.homedir()
+// IPC event to set settings
+ipcMain.on('set-settings', (event, args) => {
+  setSettings(event, args)
+})
 
-  // Define the path for the software's folder in the downloads directory
-  const downloadsDirectory = path.join(userHomeDir, 'Downloads')
-  const softwareFolder = path.join(downloadsDirectory, softwareName)
-
-  // Ensure that the software's folder exists, create it if necessary
-  if (!fs.existsSync(softwareFolder)) {
-    fs.mkdirSync(softwareFolder)
-  }
-
-  // Extract the original file name from the filePath
-  const originalFileName = path.basename(filePath)
-
-  // Construct the path for the compressed image within the software's folder
-  const compressedPath = path.join(softwareFolder, originalFileName)
-
-  // Perform image compression using 'sharp' library
-  sharp(filePath)
-    .resize({ width: 800 }) // Adjust the resizing options as needed
-    .toFile(compressedPath, (err, info) => {
-      if (err) {
-        console.error(err)
-        event.reply('compression-failed', err.message)
-      } else {
-        console.log('Image compressed successfully:', info)
-        event.reply('compression-success', compressedPath)
-      }
-    })
+// IPC event to get settings
+ipcMain.on('get-settings', (event) => {
+  getSettings(event)
 })
