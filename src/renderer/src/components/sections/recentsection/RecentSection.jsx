@@ -15,11 +15,18 @@ function RecentSection() {
               time={e.time}
               status={e.status}
               size={e.size}
+              new_path={e.new_path}
               key={index}
             ></RecentItem>
           ))
         ) : (
-          <h1>Empty</h1>
+          <>
+            <div className="empty">
+              <p>
+                Welcome!! Go to new task tab<br></br> and compress some images
+              </p>
+            </div>
+          </>
         )
       ) : (
         <h1>Error</h1>

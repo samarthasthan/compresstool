@@ -44,9 +44,12 @@
   padding: 3px 0px;
 }
 
-.options {
+.open-folder .icon {
   width: 19px;
-  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px 10px;
 }
 
 .size {

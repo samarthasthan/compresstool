@@ -9,16 +9,28 @@ function UploadSection() {
 
   const handleDrop = (e) => {
     e.preventDefault()
-    console.log(e.target.files[0].path)
+    const files = e.dataTransfer.files
+
+    // Filter out non-image files
+    const imageFiles = Array.from(files).filter((file) => {
+      // Check if the file type starts with "image/"
+
+      return file.type.startsWith('image/')
+    })
+
+    addFiles(imageFiles)
   }
 
   const handleDragOver = (e) => {
     e.preventDefault()
-    console.log(e.target.files[0].path)
   }
 
   const uploadHandle = (e) => {
     const files = e.target.files
+    addFiles(files)
+  }
+
+  function addFiles(files) {
     const filePaths = []
 
     // Extract the paths from the selected files
@@ -48,13 +60,16 @@ function UploadSection() {
     <div className={`upload-section ${currentTab === 'left' ? 'active' : ''}`}>
       <div className="upload-area " onDrop={handleDrop} onDragOver={handleDragOver}>
         <label htmlFor="input">
-          Click here or <br /> drag and drop your files
+          <p>
+            Click here or <br /> drag and drop your files
+          </p>
           <input
             id="input"
             type="file"
             onInput={(e) => uploadHandle(e)}
             ref={inputFileRef}
             multiple
+            accept="image/*"
           />
         </label>
       </div>

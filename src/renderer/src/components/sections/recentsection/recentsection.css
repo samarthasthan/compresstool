@@ -10,3 +10,13 @@
 .recent-section.active {
   left: 0vw;
 }
+
+.empty {
+  height: calc(100vh - 68px);
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--primary-color);
+}

@@ -17,7 +17,6 @@ function App() {
       window.electron.ipcRenderer.send('send-recents')
       await window.electron.ipcRenderer.on('take-recents', (event, args) => {
         dispatch(setRecents(args))
-        console.log(args)
       })
     }
     getRecents()

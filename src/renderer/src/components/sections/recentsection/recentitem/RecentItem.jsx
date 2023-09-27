@@ -1,8 +1,12 @@
 /* eslint-disable react/prop-types */
+
 import './recentitem.css'
 import imageicon from '../../../../assets/image-line.svg'
-import dots from '../../../../assets/dots.svg'
-function RecentItem({ title, time, status, size }) {
+import folderImage from '../../../../assets/folder-image.svg'
+function RecentItem({ title, time, status, size, new_path }) {
+  function handleOpenFolder() {
+    window.electron.ipcRenderer.send('open-file-path', new_path)
+  }
   return (
     <div className="recent-item">
       <div className="wrapper">
@@ -22,8 +26,15 @@ function RecentItem({ title, time, status, size }) {
             <p>{status}</p>
           )}
         </div>
-        <div className="option-section">
-          <img className="options" src={dots} alt="options" />
+        <div className="open-folder">
+          <img
+            className="icon options"
+            src={folderImage}
+            alt="open-folder"
+            onClick={() => {
+              handleOpenFolder()
+            }}
+          />
         </div>
       </div>
     </div>

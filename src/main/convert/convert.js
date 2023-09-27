@@ -79,7 +79,12 @@ export const compressFiles = async (event) => {
           // Compress the image using Sharp within a Promise
           await new Promise((resolve) => {
             sharp(recent.original_path)
-              .jpeg({ quality: parseInt(settingsObject.quality) }) // You can use .webp() for WebP format if preferred
+              .webp({
+                quality:
+                  settingsObject.quality < 5 ? 5 : Math.floor(parseInt(settingsObject.quality / 2)),
+                progressive: true,
+                removeMetadata: true
+              })
               .toFile(outputPath, (err, info) => {
                 if (err) {
                   console.error(`Error compressing ${recent.name}:`, err)

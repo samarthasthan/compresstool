@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: compresstool
+appId: com.bitshrink.samarth
+productName: bitShrink
 directories:
   buildResources: build
 files:
@@ -32,11 +32,11 @@ linux:
     - AppImage
     - snap
     - deb
-  maintainer: electronjs.org
+  maintainer: https://samarthasthan.me/
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  url: https://samarthasthan.me/

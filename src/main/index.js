@@ -1,11 +1,63 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
-import { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain, dialog, Menu } from 'electron'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { setSettings, getSettings } from './settings/settings'
 import { addFiles, sendRecents, compressFiles } from './convert/convert'
 
 //// Start
+
+const isMac = process.platform === 'darwin'
+const template = [
+  // { role: 'appMenu' }
+  ...(isMac
+    ? [
+        {
+          label: app.name,
+          submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+          ]
+        }
+      ]
+    : []),
+  // { role: 'fileMenu' }
+  {
+    label: 'File',
+    submenu: [isMac ? { role: 'close' } : { role: 'quit' }]
+  },
+  // { role: 'windowMenu' }
+  {
+    label: 'Window',
+    submenu: [
+      { role: 'minimize' },
+      { role: 'zoom' },
+      ...(isMac
+        ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
+        : [{ role: 'close' }])
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click: async () => {
+          const { shell } = require('electron')
+          await shell.openExternal('https://samarthasthan.me/')
+        }
+      }
+    ]
+  }
+]
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
 let mainWindow
 function createWindow() {
   // Create the browser window.
@@ -110,4 +162,9 @@ ipcMain.on('send-recents', (event) => {
 
 ipcMain.on('compress-files', (event) => {
   compressFiles(event)
+})
+
+ipcMain.on('open-file-path', (event, args) => {
+  let directoryPath = path.dirname(args)
+  shell.openPath(directoryPath)
 })
