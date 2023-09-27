@@ -1,13 +1,14 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { setSettings, getSettings } from './settings/settings'
 
 //// Start
+let mainWindow
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 804,
     height: 496,
     show: false,
@@ -81,4 +82,19 @@ ipcMain.on('set-settings', (event, args) => {
 // IPC event to get settings
 ipcMain.on('get-settings', (event) => {
   getSettings(event)
+})
+
+ipcMain.on('open-dir-changer', async (event, args) => {
+  // Show a folder selector dialog
+  const result = await dialog.showOpenDialog(mainWindow, {
+    properties: ['openDirectory']
+  })
+
+  // Check if the user selected a folder
+  if (!result.canceled && result.filePaths.length > 0) {
+    const selectedFolder = result.filePaths[0]
+    setSettings(event, { location: selectedFolder, quality: args })
+    // Send a completion signal to the renderer process
+    event.sender.send('dir-selection-completed')
+  }
 })

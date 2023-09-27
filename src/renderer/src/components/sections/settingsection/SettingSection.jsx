@@ -5,7 +5,11 @@ import resetIcon from '../../../assets/loop.svg'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { changeSettings } from '../../../utils/SettingsUtils'
+import { useDispatch } from 'react-redux'
+import { getSettings } from '../../../store/slices/SettingsSlice'
+
 function SettingSection() {
+  const dispatch = useDispatch()
   const handleChangeSettings = changeSettings()
   const { quality, location } = useSelector((state) => state.settings.value)
   const [sliderValue, setSliderValue] = useState(0)
@@ -32,6 +36,33 @@ function SettingSection() {
     toggleQualityOptions(false)
   }
 
+  async function onChangeDir() {
+    try {
+      // Send the 'open-dir-changer' event and wait for its completion
+      await new Promise((resolve) => {
+        // Send the 'open-dir-changer' event
+        window.electron.ipcRenderer.send('open-dir-changer', quality)
+
+        // Listen for an event indicating the folder selection is completed
+        window.electron.ipcRenderer.once('dir-selection-completed', () => {
+          // Resolve the Promise once the folder selection is completed
+          resolve()
+        })
+      })
+
+      // After the folder selection is completed, send 'get-settings' event
+      window.electron.ipcRenderer.send('get-settings')
+
+      // Listen for 'take-settings' event and process settings
+      window.electron.ipcRenderer.once('take-settings', (event, settingsObject) => {
+        dispatch(getSettings(settingsObject))
+      })
+    } catch (error) {
+      // Handle any errors that occur during the process
+      console.error('Error:', error)
+    }
+  }
+
   return (
     <div className="setting-section ">
       <div className="setting-item">
@@ -43,7 +74,12 @@ function SettingSection() {
             <p className="title-bold">Storage Location</p>
             <p className="time">{location}</p>
           </div>
-          <div className="size">
+          <div
+            className="size"
+            onClick={() => {
+              onChangeDir()
+            }}
+          >
             <p>Change</p>
           </div>
           <div className="option-section"></div>
@@ -59,7 +95,15 @@ function SettingSection() {
             <p className="time">{quality === 85 ? 'Recommended (85%)' : quality}</p>
           </div>
 
-          <img className="reset-quality" src={resetIcon} alt="icon" />
+          <img
+            className="reset-quality"
+            src={resetIcon}
+            alt="icon"
+            onClick={() => {
+              onSaveHandler(85)
+              sliderOnChange(85)
+            }}
+          />
 
           <div className="size">
             <p
