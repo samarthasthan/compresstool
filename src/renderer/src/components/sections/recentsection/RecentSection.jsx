@@ -10,7 +10,13 @@ function RecentSection() {
       {recents ? (
         recents.length > 0 ? (
           recents.map((e, index) => (
-            <RecentItem title={e.name} time={e.time} status={e.status} key={index}></RecentItem>
+            <RecentItem
+              title={e.name}
+              time={e.time}
+              status={e.status}
+              size={e.size}
+              key={index}
+            ></RecentItem>
           ))
         ) : (
           <h1>Empty</h1>

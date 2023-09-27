@@ -28,7 +28,7 @@ function UploadSection() {
     }
 
     // Send the file paths to the main process
-    window.electron.ipcRenderer.send('compress-files', filePaths)
+    window.electron.ipcRenderer.send('add-files', filePaths)
 
     // Clear the input element by resetting its value
     if (inputFileRef.current) {
@@ -39,6 +39,10 @@ function UploadSection() {
     }
     getRecents()
     dispatch(toggle('right'))
+    window.electron.ipcRenderer.send('compress-files')
+    window.electron.ipcRenderer.on('take-update', () => {
+      window.electron.ipcRenderer.send('send-recents')
+    })
   }
   return (
     <div className={`upload-section ${currentTab === 'left' ? 'active' : ''}`}>

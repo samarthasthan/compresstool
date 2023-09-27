@@ -2,7 +2,7 @@
 import './recentitem.css'
 import imageicon from '../../../../assets/image-line.svg'
 import dots from '../../../../assets/dots.svg'
-function RecentItem({ title, time, status }) {
+function RecentItem({ title, time, status, size }) {
   return (
     <div className="recent-item">
       <div className="wrapper">
@@ -14,7 +14,13 @@ function RecentItem({ title, time, status }) {
           <p className="time">{time}</p>
         </div>
         <div className="size">
-          <p>{status}</p>
+          {size ? (
+            <p>{size}</p>
+          ) : status === 'error' ? (
+            <p className="error">Error</p>
+          ) : (
+            <p>{status}</p>
+          )}
         </div>
         <div className="option-section">
           <img className="options" src={dots} alt="options" />

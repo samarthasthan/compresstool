@@ -51,4 +51,11 @@
 
 .size {
   padding: 0px 16px;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.size .error {
+  color: red;
 }
