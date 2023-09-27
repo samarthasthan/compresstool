@@ -30,7 +30,7 @@ export const setSettings = (event, args) => {
   }
   !fs.existsSync(recentsFilePath)
     ? fs.writeFileSync(recentsFilePath, JSON.stringify([]))
-    : console.log()
+    : setPendingFailed()
 }
 
 // Send  settings
@@ -48,4 +48,16 @@ export const getSettings = (event) => {
     // Optionally, send an error message back to the renderer process
     event.sender.send('take-settings', error.message)
   }
+}
+
+function setPendingFailed() {
+  let recents
+  const recentsJson = fs.readFileSync(recentsFilePath, 'utf-8')
+  recents = JSON.parse(recentsJson)
+  recents.forEach((element) => {
+    if (element.status === 'pending') {
+      element.status = 'error'
+    }
+  })
+  fs.writeFileSync(recentsFilePath, JSON.stringify(recents, null, 2))
 }

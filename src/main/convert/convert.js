@@ -63,6 +63,9 @@ export const compressFiles = async (event) => {
     const settingsJson = fs.readFileSync(settingsFilePath, 'utf-8')
     const settingsObject = JSON.parse(settingsJson)
     const outputDirectory = settingsObject.location
+    if (!fs.existsSync(outputDirectory)) {
+      fs.mkdirSync(outputDirectory)
+    }
 
     // Process each recent object
     for (let i = recents.length - 1; i >= 0; i--) {
@@ -72,7 +75,7 @@ export const compressFiles = async (event) => {
       if (fs.existsSync(recent.original_path)) {
         const outputPath = path.join(outputDirectory, recent.name)
 
-        if (recent.status !== 'successful') {
+        if (recent.status === 'pending') {
           // Compress the image using Sharp within a Promise
           await new Promise((resolve) => {
             sharp(recent.original_path)
