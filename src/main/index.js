@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { setSettings, getSettings } from './settings/settings'
+import { compressFiles, sendRecents } from './convert/convert'
 
 //// Start
 let mainWindow
@@ -97,4 +98,12 @@ ipcMain.on('open-dir-changer', async (event, args) => {
     // Send a completion signal to the renderer process
     event.sender.send('dir-selection-completed')
   }
+})
+
+ipcMain.on('compress-files', (event, args) => {
+  compressFiles(event, args)
+})
+
+ipcMain.on('send-recents', (event) => {
+  sendRecents(event)
 })

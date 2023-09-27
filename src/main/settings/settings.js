@@ -14,6 +14,9 @@ const appDirectory = app.getPath('userData')
 // Where app settings store
 const settingsFilePath = path.join(appDirectory, 'settings.json')
 
+// Where app recents store
+const recentsFilePath = path.join(appDirectory, 'recent.json', '')
+
 export const setSettings = (event, args) => {
   // Check is settings exists if not create default settings
   if (!fs.existsSync(settingsFilePath)) {
@@ -25,6 +28,9 @@ export const setSettings = (event, args) => {
   } else {
     args === null ? console.log() : fs.writeFileSync(settingsFilePath, JSON.stringify(args))
   }
+  !fs.existsSync(recentsFilePath)
+    ? fs.writeFileSync(recentsFilePath, JSON.stringify([]))
+    : console.log()
 }
 
 // Send  settings
