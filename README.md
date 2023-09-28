@@ -26,6 +26,8 @@ $ npm run dev
 # For windows
 $ npm run build:win
 
+but make sure to install sharp for windows using - npm install --platform=win32 --arch=x64 sharp
+
 # For macOS
 $ npm run build:mac
 
