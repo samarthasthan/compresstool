@@ -22,11 +22,14 @@ export const setSettings = (event, args) => {
   if (!fs.existsSync(settingsFilePath)) {
     let settingsData = {
       location: appDownloadsDirectory,
-      quality: 85
+      quality: 55,
+      format: 'webp'
     }
-    fs.writeFileSync(settingsFilePath, JSON.stringify(settingsData))
+    fs.writeFileSync(settingsFilePath, JSON.stringify(settingsData, null, 2))
   } else {
-    args === null ? console.log() : fs.writeFileSync(settingsFilePath, JSON.stringify(args))
+    args === null
+      ? console.log('ignore it')
+      : fs.writeFileSync(settingsFilePath, JSON.stringify(args))
   }
   !fs.existsSync(recentsFilePath)
     ? fs.writeFileSync(recentsFilePath, JSON.stringify([]))

@@ -7,11 +7,12 @@ import { useSelector } from 'react-redux'
 import { changeSettings } from '../../../utils/SettingsUtils'
 import { useDispatch } from 'react-redux'
 import { getSettings } from '../../../store/slices/SettingsSlice'
+import imageicon from '../../../assets/image-line.svg'
 
 function SettingSection() {
   const dispatch = useDispatch()
   const handleChangeSettings = changeSettings()
-  const { quality, location } = useSelector((state) => state.settings.value)
+  const { quality, location, format } = useSelector((state) => state.settings.value)
   const [sliderValue, setSliderValue] = useState(0)
   const [qualityOption, toggleQualityOptions] = useState(false)
   useEffect(() => {
@@ -32,7 +33,7 @@ function SettingSection() {
   }
 
   function onSaveHandler(value) {
-    handleChangeSettings({ location: location, quality: value })
+    handleChangeSettings({ location: location, quality: value, format: format })
     toggleQualityOptions(false)
   }
 
@@ -61,6 +62,10 @@ function SettingSection() {
       // Handle any errors that occur during the process
       console.error('Error:', error)
     }
+  }
+
+  function onChangeFormat(value) {
+    handleChangeSettings({ location: location, quality: quality, format: value })
   }
 
   return (
@@ -92,7 +97,7 @@ function SettingSection() {
           </div>
           <div className="title-area">
             <p className="title-bold">Adjust quality</p>
-            <p className="time">{quality === 85 ? 'Recommended (85%)' : quality}</p>
+            <p className="time">{quality === 55 ? 'Recommended (55%)' : quality}</p>
           </div>
 
           <img
@@ -100,8 +105,8 @@ function SettingSection() {
             src={resetIcon}
             alt="icon"
             onClick={() => {
-              onSaveHandler(85)
-              sliderOnChange(85)
+              onSaveHandler(55)
+              sliderOnChange(55)
             }}
           />
 
@@ -117,6 +122,59 @@ function SettingSection() {
           <div className="option-section"></div>
         </div>
       </div>
+      <div className="setting-item format">
+        <div className="wrapper">
+          <div className="icon">
+            <img src={imageicon} alt="icon" />
+          </div>
+          <div className="title-area">
+            <p className="title-bold">Change Image Format</p>
+            <p className="time">Current- {format.toUpperCase()}</p>
+          </div>
+          <div className="size">
+            <p>{format.toUpperCase()}</p>
+            <div className="drop-down">
+              <p
+                onClick={() => {
+                  onChangeFormat('jpeg')
+                }}
+              >
+                JPEG
+              </p>
+              <p
+                onClick={() => {
+                  onChangeFormat('png')
+                }}
+              >
+                PNG
+              </p>
+              <p
+                onClick={() => {
+                  onChangeFormat('webp')
+                }}
+              >
+                WEBP
+              </p>
+              <p
+                onClick={() => {
+                  onChangeFormat('avif')
+                }}
+              >
+                AVIF
+              </p>
+              <p
+                onClick={() => {
+                  onChangeFormat('tiff')
+                }}
+              >
+                TIFF
+              </p>
+            </div>
+          </div>
+          <div className="option-section"></div>
+        </div>
+      </div>
+
       <div className="footer">
         <div className="version">
           <p className="title">Version: 1.0.0</p>

@@ -19,7 +19,7 @@ export const addFiles = (event, args) => {
   let recents = []
   !fs.existsSync(recentsFilePath)
     ? fs.writeFileSync(recentsFilePath, JSON.stringify(recents))
-    : console.log()
+    : console.log('ignore it')
   if (fs.existsSync(recentsFilePath)) {
     // Read the existing recents data if the file exists
     const recentsJson = fs.readFileSync(recentsFilePath, 'utf-8')
@@ -28,9 +28,13 @@ export const addFiles = (event, args) => {
 
   // Add each args[i] to the recents array
   for (let i = 0; i < args.length; i++) {
+    const { name } = path.parse(path.basename(args[i]))
+    // Read the settings from the JSON file
+    const settingsJson = fs.readFileSync(settingsFilePath, 'utf-8')
+    const settingsObject = JSON.parse(settingsJson)
     let recent0bject = {
       uuid: random_uuid,
-      name: path.basename(args[i]),
+      name: `${name}.${settingsObject.format}`,
       original_path: args[i],
       time: new Date().toLocaleString(),
       status: 'pending',
@@ -73,36 +77,62 @@ export const compressFiles = async (event) => {
 
       // Check if the file exists
       if (fs.existsSync(recent.original_path)) {
-        const outputPath = path.join(outputDirectory, recent.name)
+        // Perform compression
+        const { name } = path.parse(path.basename(recent.name))
+        const outputPath = path.join(outputDirectory, `${name}.${settingsObject.format}`)
 
         if (recent.status === 'pending') {
           // Compress the image using Sharp within a Promise
           await new Promise((resolve) => {
-            sharp(recent.original_path)
-              .webp({
-                quality:
-                  settingsObject.quality < 5 ? 5 : Math.floor(parseInt(settingsObject.quality / 2)),
-                progressive: true,
-                removeMetadata: true
-              })
-              .toFile(outputPath, (err, info) => {
-                if (err) {
-                  console.error(`Error compressing ${recent.name}:`, err)
-                  recent.status = 'error' // Update status to 'error' on error
-                  fs.writeFileSync(recentsFilePath, JSON.stringify(recents, null, 2))
-                  event.sender.send('take-update')
-                  resolve()
-                } else {
-                  console.log(`Compressed ${recent.name} and saved to ${outputPath}`)
-                  recent.status = 'successful' // Update status to 'successful' on success
-                  recent.new_path = outputPath // Set new_path to the output path
-                  recent.size = formatBytes(info.size) // Set size to the file size
+            let image = sharp(recent.original_path)
 
-                  fs.writeFileSync(recentsFilePath, JSON.stringify(recents, null, 2))
-                  event.sender.send('take-update')
-                  resolve()
-                }
-              })
+            const quality =
+              settingsObject.quality < 5 ? 5 : Math.floor(parseInt(settingsObject.quality / 1.5))
+
+            // Check for the format and apply specific settings
+            switch (settingsObject.format) {
+              case 'png':
+                image = image.png({
+                  compressionLevel: 9,
+                  adaptiveFiltering: true,
+                  quality: quality
+                })
+                break
+              case 'jpeg':
+                image = image.jpeg({ quality: quality })
+                break
+              case 'webp':
+                image = image.webp({
+                  quality: quality,
+                  progressive: true,
+                  removeMetadata: true
+                })
+                break
+              case 'avif':
+                image = image.avif({ quality: quality })
+                break
+              case 'tiff':
+                image = image.tiff({ quality: quality })
+                break
+              default:
+                console.error('Invalid format:', settingsObject.format)
+                break
+            }
+            image.toFile(outputPath, (err, info) => {
+              if (err) {
+                recent.status = 'error' // Update status to 'error' on error
+                fs.writeFileSync(recentsFilePath, JSON.stringify(recents, null, 2))
+                event.sender.send('take-update')
+                resolve()
+              } else {
+                recent.status = 'successful' // Update status to 'successful' on success
+                recent.new_path = outputPath // Set new_path to the output path
+                recent.size = formatBytes(info.size) // Set size to the file size
+                fs.writeFileSync(recentsFilePath, JSON.stringify(recents, null, 2))
+                event.sender.send('take-update')
+                resolve()
+              }
+            })
           })
         }
       } else {

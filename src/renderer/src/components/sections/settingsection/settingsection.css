@@ -149,3 +149,31 @@ input[type='range']:active::-webkit-slider-thumb {
   cursor: pointer;
   padding: 0px 10px;
 }
+
+.format .size {
+  display: flex !important;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.format .size p {
+  min-width: 35px;
+}
+
+.format .size:hover .drop-down {
+  display: block;
+}
+
+.drop-down p:hover {
+  color: var(--primary-color);
+}
+
+.format .drop-down {
+  background-color: var(--white-color);
+  top: 24px;
+  position: absolute;
+  text-align: center;
+  display: none;
+}
