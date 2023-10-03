@@ -1,7 +1,7 @@
 {
   "name": "bitShrink",
-  "version": "1.0.0",
-  "description": "Your Image Compressor Tool",
+  "version": "1.0.1",
+  "description": "Your All in One Image Compressor Tool",
   "main": "./out/main/index.js",
   "author": "Samarth Asthan",
   "homepage": "https://samarthasthan.me/",
